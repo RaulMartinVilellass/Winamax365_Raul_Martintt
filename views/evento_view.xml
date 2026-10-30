@@ -1,0 +1,48 @@
+<odoo>
+
+  <!-- Vista LIST -->
+  <record id="view_evento_list" model="ir.ui.view">
+    <field name="name">winamax_365.evento.list</field>
+    <field name="model">winamax_365.evento</field>
+    <field name="arch" type="xml">
+      <list string="Lista de eventos">
+        <field name="nombreEvento"/>
+        <field name="deporteEvento"/>
+        <field name="fechaEvento"/>
+        <field name="enDirecto"/>
+        <field name="cuotaEvento"/>
+      </list>
+    </field>
+  </record>
+
+  <!-- Vista FORM -->
+  <record id="view_evento_form" model="ir.ui.view">
+    <field name="name">winamax_365.evento.form</field>
+    <field name="model">winamax_365.evento</field>
+    <field name="arch" type="xml">
+      <form string="Ficha del evento">
+        <sheet>
+          <group>
+            <field name="nombreEvento"/>
+            <field name="deporteEvento"/>
+            <field name="fechaEvento"/>
+            <field name="enDirecto"/>
+            <field name="cuotaEvento"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <!-- Acción -->
+  <record id="action_evento" model="ir.actions.act_window">
+    <field name="name">EVENTOS</field>
+    <field name="res_model">winamax_365.evento</field>
+    <field name="view_mode">list,form</field>
+    <field name="view_id" ref="view_evento_list"/>
+  </record>
+
+  <!-- Menú -->
+  <menuitem id="menu_eventos" parent="menu_winamax_root"
+            name="Eventos" action="action_evento"/>
+</odoo>
