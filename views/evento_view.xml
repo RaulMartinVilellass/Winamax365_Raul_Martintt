@@ -1,48 +1,115 @@
 <odoo>
 
-  <!-- Vista LIST -->
   <record id="view_evento_list" model="ir.ui.view">
     <field name="name">winamax_365.evento.list</field>
     <field name="model">winamax_365.evento</field>
     <field name="arch" type="xml">
-      <list string="Lista de eventos">
+      <list string="Lista de eventos" decoration-muted="estadoEvento == 'cancelado'">
         <field name="nombreEvento"/>
         <field name="deporteEvento"/>
         <field name="fechaEvento"/>
-        <field name="enDirecto"/>
+        <field name="estadoEvento" widget="badge"/>
         <field name="cuotaEvento"/>
+        <field name="totalApuestas"/>
       </list>
     </field>
   </record>
 
-  <!-- Vista FORM -->
   <record id="view_evento_form" model="ir.ui.view">
     <field name="name">winamax_365.evento.form</field>
     <field name="model">winamax_365.evento</field>
     <field name="arch" type="xml">
       <form string="Ficha del evento">
+        <header>
+          <field name="estadoEvento" widget="statusbar"/>
+        </header>
         <sheet>
+          <field name="imagenEvento" widget="image" class="oe_avatar"/>
+          <div class="oe_title">
+            <h1><field name="nombreEvento" placeholder="Ej.: Real Zaragoza - Huesca"/></h1>
+          </div>
           <group>
-            <field name="nombreEvento"/>
-            <field name="deporteEvento"/>
-            <field name="fechaEvento"/>
-            <field name="enDirecto"/>
-            <field name="cuotaEvento"/>
+            <group string="Datos del evento">
+              <field name="deporteEvento"/>
+              <field name="fechaEvento"/>
+            </group>
+            <group string="Apuestas">
+              <field name="cuotaEvento"/>
+              <field name="totalApuestas"/>
+            </group>
           </group>
+          <notebook>
+            <page string="Apuestas">
+              <field name="apuesta_ids" readonly="1">
+                <list>
+                  <field name="usuario_id"/>
+                  <field name="importeApuesta"/>
+                  <field name="cuotaApuesta"/>
+                  <field name="estadoApuesta"/>
+                </list>
+              </field>
+            </page>
+          </notebook>
         </sheet>
       </form>
     </field>
   </record>
 
-  <!-- Acción -->
+  <record id="view_evento_search" model="ir.ui.view">
+    <field name="name">winamax_365.evento.search</field>
+    <field name="model">winamax_365.evento</field>
+    <field name="arch" type="xml">
+      <search string="Buscar eventos">
+        <field name="nombreEvento"/>
+        <field name="deporteEvento"/>
+        <filter name="f_programados" string="Programados" domain="[('estadoEvento', '=', 'programado')]"/>
+        <filter name="f_finalizados" string="Finalizados" domain="[('estadoEvento', '=', 'finalizado')]"/>
+        <separator/>
+        <filter name="f_futbol" string="Fútbol" domain="[('deporteEvento', '=', 'futbol')]"/>
+        <group>
+          <filter name="g_deporte" string="Deporte" context="{'group_by': 'deporteEvento'}"/>
+          <filter name="g_estado" string="Estado" context="{'group_by': 'estadoEvento'}"/>
+          <filter name="g_fecha" string="Mes del evento" context="{'group_by': 'fechaEvento:month'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="view_evento_kanban" model="ir.ui.view">
+    <field name="name">winamax_365.evento.kanban</field>
+    <field name="model">winamax_365.evento</field>
+    <field name="arch" type="xml">
+      <kanban default_group_by="estadoEvento" group_create="false">
+        <templates>
+          <t t-name="card">
+            <field name="nombreEvento" class="fw-bold fs-5"/>
+            <div><field name="deporteEvento"/> · <field name="fechaEvento"/></div>
+            <div>Cuota: <field name="cuotaEvento"/> · Apuestas: <field name="totalApuestas"/></div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+
+  <record id="view_evento_calendar" model="ir.ui.view">
+    <field name="name">winamax_365.evento.calendar</field>
+    <field name="model">winamax_365.evento</field>
+    <field name="arch" type="xml">
+      <calendar string="Calendario de eventos" date_start="fechaEvento"
+                color="deporteEvento" mode="month" quick_create="0">
+        <field name="nombreEvento"/>
+        <field name="cuotaEvento"/>
+      </calendar>
+    </field>
+  </record>
+
   <record id="action_evento" model="ir.actions.act_window">
     <field name="name">EVENTOS</field>
     <field name="res_model">winamax_365.evento</field>
-    <field name="view_mode">list,form</field>
-    <field name="view_id" ref="view_evento_list"/>
+    <field name="view_mode">list,kanban,calendar,form</field>
+    <field name="search_view_id" ref="view_evento_search"/>
   </record>
 
-  <!-- Menú -->
   <menuitem id="menu_eventos" parent="menu_winamax_root"
-            name="Eventos" action="action_evento"/>
+            name="Eventos" action="action_evento" sequence="20"/>
 </odoo>

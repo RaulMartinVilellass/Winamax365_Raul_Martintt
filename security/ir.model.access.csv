@@ -1,5 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_usuario_user,access.usuario.user,model_winamax_365_usuario,base.group_user,1,1,1,1
-access_evento_user,access.evento.user,model_winamax_365_evento,base.group_user,1,1,1,1
-access_apuesta_user,access.apuesta.user,model_winamax_365_apuesta,base.group_user,1,1,1,1
-access_juego_user,access.juego.user,model_winamax_365_juego,base.group_user,1,1,1,1
+access_usuario_user,access.usuario.user,model_winamax_365_usuario,base.group_user,1,1,1,0
+access_usuario_admin,access.usuario.admin,model_winamax_365_usuario,base.group_system,1,1,1,1
+access_evento_user,access.evento.user,model_winamax_365_evento,base.group_user,1,0,0,0
+access_evento_admin,access.evento.admin,model_winamax_365_evento,base.group_system,1,1,1,1
+access_apuesta_user,access.apuesta.user,model_winamax_365_apuesta,base.group_user,1,1,1,0
+access_apuesta_admin,access.apuesta.admin,model_winamax_365_apuesta,base.group_system,1,1,1,1
+access_juego_user,access.juego.user,model_winamax_365_juego,base.group_user,1,0,0,0
+access_juego_admin,access.juego.admin,model_winamax_365_juego,base.group_system,1,1,1,1

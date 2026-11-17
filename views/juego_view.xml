@@ -1,6 +1,5 @@
 <odoo>
 
-  <!-- Vista LIST -->
   <record id="view_juego_list" model="ir.ui.view">
     <field name="name">winamax_365.juego.list</field>
     <field name="model">winamax_365.juego</field>
@@ -8,40 +7,87 @@
       <list string="Lista de juegos">
         <field name="nombreJuego"/>
         <field name="tipoJuego"/>
-        <field name="multiplicadorMaximo"/>
-        <field name="tieneBonus"/>
-        <field name="tieneJackpot"/>
+        <field name="fechaLanzamiento"/>
+        <field name="rtp"/>
+        <field name="numeroFavoritos"/>
+        <field name="activo"/>
       </list>
     </field>
   </record>
 
-  <!-- Vista FORM -->
   <record id="view_juego_form" model="ir.ui.view">
     <field name="name">winamax_365.juego.form</field>
     <field name="model">winamax_365.juego</field>
     <field name="arch" type="xml">
       <form string="Ficha del juego">
         <sheet>
+          <field name="imagenJuego" widget="image" class="oe_avatar"/>
+          <div class="oe_title">
+            <h1><field name="nombreJuego" placeholder="Nombre del juego"/></h1>
+          </div>
           <group>
-            <field name="nombreJuego"/>
-            <field name="tipoJuego"/>
-            <field name="multiplicadorMaximo"/>
-            <field name="tieneBonus"/>
-            <field name="tieneJackpot"/>
+            <group string="General">
+              <field name="tipoJuego"/>
+              <field name="fechaLanzamiento"/>
+              <field name="activo"/>
+            </group>
+            <group string="Números">
+              <field name="rtp"/>
+              <field name="numeroFavoritos"/>
+            </group>
           </group>
+          <notebook>
+            <page string="Jugadores que lo prefieren">
+              <field name="usuario_ids"/>
+            </page>
+          </notebook>
         </sheet>
       </form>
     </field>
   </record>
 
-  <!-- Acción -->
+  <record id="view_juego_search" model="ir.ui.view">
+    <field name="name">winamax_365.juego.search</field>
+    <field name="model">winamax_365.juego</field>
+    <field name="arch" type="xml">
+      <search string="Buscar juegos">
+        <field name="nombreJuego"/>
+        <filter name="f_activos" string="Disponibles" domain="[('activo', '=', True)]"/>
+        <group>
+          <filter name="g_tipo" string="Tipo" context="{'group_by': 'tipoJuego'}"/>
+          <filter name="g_lanzamiento" string="Año de lanzamiento" context="{'group_by': 'fechaLanzamiento:year'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="view_juego_kanban" model="ir.ui.view">
+    <field name="name">winamax_365.juego.kanban</field>
+    <field name="model">winamax_365.juego</field>
+    <field name="arch" type="xml">
+      <kanban default_group_by="tipoJuego" group_create="false">
+        <templates>
+          <t t-name="card">
+            <div class="d-flex">
+              <field name="imagenJuego" widget="image" class="me-3" options="{'size': [64, 64]}"/>
+              <div>
+                <field name="nombreJuego" class="fw-bold fs-5"/>
+                <div>RTP <field name="rtp"/>%</div>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+
   <record id="action_juego" model="ir.actions.act_window">
     <field name="name">CASINO</field>
     <field name="res_model">winamax_365.juego</field>
-    <field name="view_mode">list,form</field>
-    <field name="view_id" ref="view_juego_list"/>
+    <field name="view_mode">list,kanban,form</field>
+    <field name="search_view_id" ref="view_juego_search"/>
   </record>
 
-  <!-- Menú -->
-  <menuitem id="menu_juegos" parent="menu_winamax_root" name="Casino" action="action_juego"/>
+  <menuitem id="menu_juegos" parent="menu_winamax_root"
+            name="Casino" action="action_juego" sequence="40"/>
 </odoo>

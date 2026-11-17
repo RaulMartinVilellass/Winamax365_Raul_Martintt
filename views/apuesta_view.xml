@@ -1,56 +1,104 @@
 <odoo>
 
-  <!-- Vista LIST -->
   <record id="view_apuesta_list" model="ir.ui.view">
     <field name="name">winamax_365.apuesta.list</field>
     <field name="model">winamax_365.apuesta</field>
     <field name="arch" type="xml">
-      <list string="Lista de apuestas">
+      <list string="Lista de apuestas" decoration-success="estadoApuesta == 'ganada'"
+            decoration-danger="estadoApuesta == 'perdida'"
+            decoration-muted="estadoApuesta == 'anulada'">
+        <field name="referenciaApuesta"/>
+        <field name="fechaApuesta"/>
         <field name="usuario_id"/>
         <field name="evento_id"/>
-        <field name="importeApuesta"/>
+        <field name="tipoApuesta"/>
+        <field name="importeApuesta" sum="Total apostado"/>
         <field name="cuotaApuesta"/>
         <field name="gananciaApuesta"/>
-        <field name="estadoApuesta"/>
+        <field name="estadoApuesta" widget="badge"/>
       </list>
     </field>
   </record>
 
-  <!-- Vista FORM -->
   <record id="view_apuesta_form" model="ir.ui.view">
     <field name="name">winamax_365.apuesta.form</field>
     <field name="model">winamax_365.apuesta</field>
     <field name="arch" type="xml">
       <form string="Ficha de la apuesta">
         <header>
-          <button name="action_ganada" type="object" string="Ganada"
-                  class="btn-primary" invisible="estadoApuesta != 'pendiente'"/>
-          <button name="action_perdida" type="object" string="Perdida"
-                  invisible="estadoApuesta != 'pendiente'"/>
           <field name="estadoApuesta" widget="statusbar"/>
         </header>
         <sheet>
+          <field name="justificante" widget="image" class="oe_avatar"/>
+          <div class="oe_title">
+            <h1><field name="referenciaApuesta"/></h1>
+          </div>
           <group>
-            <field name="usuario_id"/>
-            <field name="evento_id"/>
-            <field name="importeApuesta"/>
-            <field name="cuotaApuesta"/>
-            <field name="gananciaApuesta"/>
+            <group string="Apuesta">
+              <field name="usuario_id"/>
+              <field name="evento_id"/>
+              <field name="fechaApuesta"/>
+              <field name="tipoApuesta"/>
+            </group>
+            <group string="Importes">
+              <field name="importeApuesta"/>
+              <field name="cuotaApuesta"/>
+              <field name="gananciaApuesta"/>
+              <field name="fechaPago"/>
+            </group>
+          </group>
+          <group string="Notas">
+            <field name="notasApuesta" nolabel="1"/>
           </group>
         </sheet>
       </form>
     </field>
   </record>
 
-  <!-- Acción -->
+  <record id="view_apuesta_search" model="ir.ui.view">
+    <field name="name">winamax_365.apuesta.search</field>
+    <field name="model">winamax_365.apuesta</field>
+    <field name="arch" type="xml">
+      <search string="Buscar apuestas">
+        <field name="referenciaApuesta"/>
+        <field name="usuario_id"/>
+        <field name="evento_id"/>
+        <filter name="f_borradores" string="Borradores" domain="[('estadoApuesta', '=', 'borrador')]"/>
+        <filter name="f_pendientes" string="Pendientes" domain="[('estadoApuesta', '=', 'pendiente')]"/>
+        <filter name="f_ganadas" string="Ganadas" domain="[('estadoApuesta', '=', 'ganada')]"/>
+        <filter name="f_perdidas" string="Perdidas" domain="[('estadoApuesta', '=', 'perdida')]"/>
+        <separator/>
+        <filter name="f_altas" string="Importe alto (≥ 50 €)" domain="[('importeApuesta', '>=', 50)]"/>
+        <group>
+          <filter name="g_estado" string="Estado" context="{'group_by': 'estadoApuesta'}"/>
+          <filter name="g_tipo" string="Tipo" context="{'group_by': 'tipoApuesta'}"/>
+          <filter name="g_usuario" string="Jugador" context="{'group_by': 'usuario_id'}"/>
+          <filter name="g_evento" string="Evento" context="{'group_by': 'evento_id'}"/>
+          <filter name="g_fecha" string="Mes" context="{'group_by': 'fechaApuesta:month'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="view_apuesta_calendar" model="ir.ui.view">
+    <field name="name">winamax_365.apuesta.calendar</field>
+    <field name="model">winamax_365.apuesta</field>
+    <field name="arch" type="xml">
+      <calendar string="Calendario de apuestas" date_start="fechaApuesta"
+                color="estadoApuesta" mode="month" quick_create="0">
+        <field name="usuario_id"/>
+        <field name="importeApuesta"/>
+      </calendar>
+    </field>
+  </record>
+
   <record id="action_apuesta" model="ir.actions.act_window">
     <field name="name">APUESTAS</field>
     <field name="res_model">winamax_365.apuesta</field>
-    <field name="view_mode">list,form</field>
-    <field name="view_id" ref="view_apuesta_list"/>
+    <field name="view_mode">list,calendar,form</field>
+    <field name="search_view_id" ref="view_apuesta_search"/>
   </record>
 
-  <!-- Menú -->
   <menuitem id="menu_apuestas" parent="menu_winamax_root"
-            name="Apuestas" action="action_apuesta"/>
+            name="Apuestas" action="action_apuesta" sequence="30"/>
 </odoo>
