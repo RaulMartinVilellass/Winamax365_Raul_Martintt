@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="juego_1" model="winamax_365.juego">
+    <field name="nombreJuego">Lightning Roulette</field>
+    <field name="tipoJuego">ruleta</field>
+    <field name="fechaLanzamiento">2018-10-01</field>
+    <field name="rtp">97.3</field>
+  </record>
+  <record id="juego_2" model="winamax_365.juego">
+    <field name="nombreJuego">Sugar Rush</field>
+    <field name="tipoJuego">slot</field>
+    <field name="fechaLanzamiento">2022-06-15</field>
+    <field name="rtp">96.5</field>
+  </record>
+  <record id="juego_3" model="winamax_365.juego">
+    <field name="nombreJuego">Mega Fortune</field>
+    <field name="tipoJuego">slot</field>
+    <field name="fechaLanzamiento">2020-03-20</field>
+    <field name="rtp">96.0</field>
+  </record>
+  <record id="juego_4" model="winamax_365.juego">
+    <field name="nombreJuego">Blackjack Clásico</field>
+    <field name="tipoJuego">blackjack</field>
+    <field name="fechaLanzamiento">2019-01-10</field>
+    <field name="rtp">99.0</field>
+  </record>
+
+  <record id="usuario_1" model="winamax_365.usuario">
+    <field name="nombreUsuario">Carlos</field>
+    <field name="apellidoUsuario">Gracia</field>
+    <field name="fechaNacimiento">1995-04-12</field>
+    <field name="saldoUsuario">500</field>
+    <field name="limiteDeposito">1000</field>
+    <field name="notasUsuario">Cliente desde el lanzamiento.</field>
+    <field name="emailUsuario">carlos.gracia@example.com</field>
+    <field name="telefonoUsuario">600111222</field>
+    <field name="nivelUsuario">plata</field>
+    <field name="juego_ids" eval="[(6, 0, [ref('juego_1'), ref('juego_2')])]"/>
+  </record>
+  <record id="usuario_2" model="winamax_365.usuario">
+    <field name="nombreUsuario">Laura</field>
+    <field name="apellidoUsuario">Pérez</field>
+    <field name="fechaNacimiento">1990-09-30</field>
+    <field name="emailUsuario">laura.perez@example.com</field>
+    <field name="telefonoUsuario">600333444</field>
+    <field name="saldoUsuario">250</field>
+    <field name="limiteDeposito">500</field>
+    <field name="juego_ids" eval="[(6, 0, [ref('juego_3')])]"/>
+  </record>
+  <record id="usuario_3" model="winamax_365.usuario">
+    <field name="nombreUsuario">Miguel</field>
+    <field name="apellidoUsuario">Soriano</field>
+    <field name="fechaNacimiento">2001-01-05</field>
+    <field name="saldoUsuario">80</field>
+    <field name="limiteDeposito">200</field>
+    <field name="juego_ids" eval="[(6, 0, [ref('juego_2'), ref('juego_3'), ref('juego_4')])]"/>
+  </record>
+  <record id="usuario_4" model="winamax_365.usuario">
+    <field name="nombreUsuario">Ana</field>
+    <field name="apellidoUsuario">Lasheras</field>
+    <field name="fechaNacimiento">1985-11-22</field>
+    <field name="saldoUsuario">0</field>
+    <field name="autoexcluido" eval="True"/>
+    <field name="notasUsuario">Autoexcluida a petición propia.</field>
+  </record>
+
+  <record id="evento_1" model="winamax_365.evento">
+    <field name="nombreEvento">Real Zaragoza - Huesca</field>
+    <field name="deporteEvento">futbol</field>
+    <field name="fechaEvento">2026-11-15 18:30:00</field>
+    <field name="cuotaEvento">2.10</field>
+  </record>
+  <record id="evento_2" model="winamax_365.evento">
+    <field name="nombreEvento">Casademont Zaragoza - Barça</field>
+    <field name="deporteEvento">baloncesto</field>
+    <field name="fechaEvento">2026-11-20 20:00:00</field>
+    <field name="cuotaEvento">3.40</field>
+  </record>
+  <record id="evento_3" model="winamax_365.evento">
+    <field name="nombreEvento">Alcaraz - Sinner</field>
+    <field name="deporteEvento">tenis</field>
+    <field name="fechaEvento">2026-11-08 16:00:00</field>
+    <field name="cuotaEvento">1.80</field>
+  </record>
+  <record id="evento_4" model="winamax_365.evento">
+    <field name="nombreEvento">Gran Premio de Abu Dabi</field>
+    <field name="deporteEvento">motor</field>
+    <field name="fechaEvento">2026-12-06 14:00:00</field>
+    <field name="cuotaEvento">4.50</field>
+  </record>
+  <record id="evento_5" model="winamax_365.evento">
+    <field name="estadoEvento">finalizado</field>
+    <field name="nombreEvento">Real Madrid - Valencia</field>
+    <field name="deporteEvento">futbol</field>
+    <field name="fechaEvento">2026-10-25 21:00:00</field>
+    <field name="cuotaEvento">1.55</field>
+  </record>
+
+  <record id="apuesta_1" model="winamax_365.apuesta">
+    <field name="referenciaApuesta">Quiniela Zaragoza</field>
+    <field name="usuario_id" ref="usuario_1"/>
+    <field name="evento_id" ref="evento_1"/>
+    <field name="importeApuesta">20</field>
+    <field name="fechaApuesta">2026-11-02 10:15:00</field>
+    <field name="estadoApuesta">pendiente</field>
+  </record>
+  <record id="apuesta_2" model="winamax_365.apuesta">
+    <field name="referenciaApuesta">Directo tenis</field>
+    <field name="usuario_id" ref="usuario_1"/>
+    <field name="evento_id" ref="evento_3"/>
+    <field name="importeApuesta">50</field>
+    <field name="fechaApuesta">2026-11-03 12:00:00</field>
+    <field name="estadoApuesta">pendiente</field>
+  </record>
+  <record id="apuesta_3" model="winamax_365.apuesta">
+    <field name="referenciaApuesta">Basket Zaragoza</field>
+    <field name="usuario_id" ref="usuario_2"/>
+    <field name="evento_id" ref="evento_2"/>
+    <field name="importeApuesta">10</field>
+    <field name="fechaApuesta">2026-11-04 19:45:00</field>
+    <field name="estadoApuesta">pendiente</field>
+  </record>
+  <record id="apuesta_4" model="winamax_365.apuesta">
+    <field name="referenciaApuesta">Apuesta F1</field>
+    <field name="usuario_id" ref="usuario_3"/>
+    <field name="evento_id" ref="evento_4"/>
+    <field name="importeApuesta">15</field>
+    <field name="fechaApuesta">2026-11-05 09:30:00</field>
+    <field name="estadoApuesta">pendiente</field>
+  </record>
+  <record id="apuesta_5" model="winamax_365.apuesta">
+    <field name="referenciaApuesta">Madrid gana</field>
+    <field name="usuario_id" ref="usuario_2"/>
+    <field name="evento_id" ref="evento_5"/>
+    <field name="importeApuesta">100</field>
+    <field name="tipoApuesta">combinada</field>
+    <field name="fechaApuesta">2026-10-24 22:00:00</field>
+    <field name="estadoApuesta">ganada</field>
+  </record>
+  <record id="apuesta_6" model="winamax_365.apuesta">
+    <field name="referenciaApuesta">Valencia sorpresa</field>
+    <field name="usuario_id" ref="usuario_3"/>
+    <field name="evento_id" ref="evento_5"/>
+    <field name="importeApuesta">30</field>
+    <field name="fechaApuesta">2026-10-24 22:30:00</field>
+    <field name="estadoApuesta">perdida</field>
+  </record>
+
+
+</odoo>

@@ -1,50 +1,124 @@
 <odoo>
 
-  <!-- Vista LIST -->
   <record id="view_usuario_list" model="ir.ui.view">
     <field name="name">winamax_365.usuario.list</field>
     <field name="model">winamax_365.usuario</field>
     <field name="arch" type="xml">
-      <list string="Lista de jugadores">
+      <list string="Lista de jugadores" decoration-danger="autoexcluido">
+        <field name="foto" widget="image" string="Foto" options="{'size': [40, 40]}"/>
         <field name="nombreUsuario"/>
         <field name="apellidoUsuario"/>
+        <field name="fechaNacimiento"/>
         <field name="edadUsuario"/>
-        <field name="saldoUsuario"/>
+        <field name="nivelUsuario" widget="badge"/>
+        <field name="saldoUsuario" sum="Saldo total"/>
         <field name="autoexcluido"/>
       </list>
     </field>
   </record>
 
-  <!-- Vista FORM -->
   <record id="view_usuario_form" model="ir.ui.view">
     <field name="name">winamax_365.usuario.form</field>
     <field name="model">winamax_365.usuario</field>
     <field name="arch" type="xml">
       <form string="Ficha del jugador">
+        <header>
+          <field name="nivelUsuario" widget="statusbar"/>
+        </header>
         <sheet>
+          <field name="foto" widget="image" class="oe_avatar"/>
           <group>
-            <field name="nombreUsuario"/>
-            <field name="apellidoUsuario"/>
-            <field name="edadUsuario"/>
-            <field name="saldoUsuario"/>
-            <field name="limiteDeposito"/>
-            <field name="autoexcluido"/>
+            <group string="Datos personales">
+              <field name="nombreUsuario"/>
+              <field name="apellidoUsuario"/>
+              <field name="fechaNacimiento"/>
+              <field name="edadUsuario"/>
+              <field name="emailUsuario" widget="email"/>
+              <field name="telefonoUsuario" widget="phone"/>
+              <field name="fechaRegistro"/>
+            </group>
+            <group string="Cuenta">
+              <field name="saldoUsuario"/>
+              <field name="limiteDeposito"/>
+              <field name="autoexcluido"/>
+            </group>
           </group>
+          <notebook>
+            <page string="Apuestas">
+              <field name="apuesta_ids" readonly="1">
+                <list>
+                  <field name="evento_id"/>
+                  <field name="fechaApuesta"/>
+                  <field name="importeApuesta"/>
+                  <field name="cuotaApuesta"/>
+                  <field name="estadoApuesta"/>
+                </list>
+              </field>
+            </page>
+            <page string="Juegos favoritos">
+              <field name="juego_ids"/>
+            </page>
+            <page string="Notas">
+              <field name="notasUsuario"/>
+            </page>
+          </notebook>
         </sheet>
       </form>
     </field>
   </record>
 
-  <!-- Acción -->
+  <record id="view_usuario_search" model="ir.ui.view">
+    <field name="name">winamax_365.usuario.search</field>
+    <field name="model">winamax_365.usuario</field>
+    <field name="arch" type="xml">
+      <search string="Buscar jugadores">
+        <field name="nombreUsuario"/>
+        <field name="apellidoUsuario"/>
+        <field name="emailUsuario"/>
+        <filter name="f_autoexcluidos" string="Autoexcluidos" domain="[('autoexcluido', '=', True)]"/>
+        <filter name="f_activos" string="Activos" domain="[('autoexcluido', '=', False)]"/>
+        <filter name="f_con_saldo" string="Con saldo" domain="[('saldoUsuario', '>', 0)]"/>
+        <separator/>
+        <filter name="f_oro" string="Nivel oro" domain="[('nivelUsuario', '=', 'oro')]"/>
+        <group>
+          <filter name="g_nivel" string="Nivel" context="{'group_by': 'nivelUsuario'}"/>
+          <filter name="g_autoexcluido" string="Autoexclusión" context="{'group_by': 'autoexcluido'}"/>
+          <filter name="g_registro" string="Mes de registro" context="{'group_by': 'fechaRegistro:month'}"/>
+        </group>
+      </search>
+    </field>
+  </record>
+
+  <record id="view_usuario_kanban" model="ir.ui.view">
+    <field name="name">winamax_365.usuario.kanban</field>
+    <field name="model">winamax_365.usuario</field>
+    <field name="arch" type="xml">
+      <kanban group_create="false">
+        <templates>
+          <t t-name="card">
+            <div class="d-flex">
+              <field name="foto" widget="image" class="me-3" options="{'size': [64, 64]}"/>
+              <div>
+                <field name="nombreUsuario" class="fw-bold fs-5"/> <field name="apellidoUsuario" class="fw-bold fs-5"/>
+                <div>Edad: <field name="edadUsuario"/></div>
+                <div>Saldo: <field name="saldoUsuario"/> €</div>
+                <field name="nivelUsuario" widget="badge"/>
+              </div>
+            </div>
+          </t>
+        </templates>
+      </kanban>
+    </field>
+  </record>
+
   <record id="action_usuario" model="ir.actions.act_window">
     <field name="name">JUGADORES</field>
     <field name="res_model">winamax_365.usuario</field>
-    <field name="view_mode">list,form</field>
-    <field name="view_id" ref="view_usuario_list"/>
+    <field name="view_mode">list,kanban,form</field>
+    <field name="search_view_id" ref="view_usuario_search"/>
   </record>
 
-  <!-- Menús -->
-  <menuitem id="menu_winamax_root" name="Winamax 365"/>
+  <menuitem id="menu_winamax_root" name="Winamax 365" sequence="10"/>
   <menuitem id="menu_jugadores" parent="menu_winamax_root"
-            name="Jugadores" action="action_usuario"/>
+            name="Jugadores" action="action_usuario" sequence="10"/>
 </odoo>
